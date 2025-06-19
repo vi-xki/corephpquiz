@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Create User</h2>
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST">
   Name: <input type="text" name="name" required><br><br>
   Email: <input type="email" name="email" required><br><br>
   Password: <input type="password" name="password" required><br><br>
@@ -20,7 +20,6 @@
   <input type="checkbox" name="skills[]" value="HTML"> HTML
   <input type="checkbox" name="skills[]" value="CSS"> CSS
   <input type="checkbox" name="skills[]" value="PHP"> PHP<br><br>
-  <!-- Profile Image: <input type="file" name="profile_image"><br><br> -->
   <input type="submit" name="submit" value="Create">
 </form>
 
@@ -34,10 +33,6 @@ if (isset($_POST['submit'])) {
     $bio      = $_POST['bio'];
     $skills   = implode(",", $_POST['skills']);
     
-    // $image = $_FILES['profile_image']['name'];
-    // $tmp_name = $_FILES['profile_image']['tmp_name'];
-    // $target = "uploads/" . $image;
-    // move_uploaded_file($tmp_name, $target);
 
     $sql = "INSERT INTO users (name, email, password, gender, dob, bio, skills)
             VALUES ('$name', '$email', '$password', '$gender', '$dob', '$bio', '$skills')";
