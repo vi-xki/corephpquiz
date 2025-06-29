@@ -1,12 +1,12 @@
-<?php include 'config.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Create User</title>
+  <title>Create User (AJAX)</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h2>Create User</h2>
-<form action="" method="POST">
+<h2>Create User (AJAX)</h2>
+<form id="userForm">
   Name: <input type="text" name="name" required><br><br>
   Email: <input type="email" name="email" required><br><br>
   Password: <input type="password" name="password" required><br><br>
@@ -20,29 +20,38 @@
   <input type="checkbox" name="skills[]" value="HTML"> HTML
   <input type="checkbox" name="skills[]" value="CSS"> CSS
   <input type="checkbox" name="skills[]" value="PHP"> PHP<br><br>
-  <input type="submit" name="submit" value="Create">
+  <input type="submit" value="Create">
 </form>
 
-<?php
-if (isset($_POST['submit'])) {
-    $name     = $_POST['name'];
-    $email    = $_POST['email'];
-    $password = $_POST['password'];
-    $gender   = $_POST['gender'];
-    $dob      = $_POST['dob'];
-    $bio      = $_POST['bio'];
-    $skills   = implode(",", $_POST['skills']);
-    
+<div id="response"></div>
 
-    $sql = "INSERT INTO users (name, email, password, gender, dob, bio, skills)
-            VALUES ('$name', '$email', '$password', '$gender', '$dob', '$bio', '$skills')";
+<script>
+  $(document).ready(function() {
+    $('#userForm').on('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
 
-    if ($conn->query($sql)) {
-        echo "User created successfully! <a href='index.php'>View Users</a>";
-    } else {
-        echo "Error: " . $conn->error;
-    }
-}
-?>
+      // console.log($(this).serialize());
+      $.ajax({
+        type: 'POST',
+        url: 'insert.php',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(response) {
+
+          console.log(response);
+          if (response.status === 'success') {
+            $('#response').html('<p style="color: green;">' + response.message + '</p>');
+            $('#userForm')[0].reset();
+          } else {
+            $('#response').html('<p style="color: red;">' + response.message + '</p>');
+          }
+        },
+        error: function(xhr, status, error) {
+          $('#response').html('<p style="color: red;">AJAX error: ' + error + '</p>');
+        }
+      });
+    });
+  });
+</script>
 </body>
 </html>
